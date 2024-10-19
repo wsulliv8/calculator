@@ -29,17 +29,21 @@ function acceptInput() {
     input = changeInput(button, input);
     log(input);
   });
+  //need to check if button is allowed via a dictionary
   document.addEventListener('keydown', (event) => {
     let button = event.key;
     input = changeInput(button, input);
     log(input);
   });
-  if (typeof input === 'number') return input;
+  if (typeof input === 'number') {
+    log(input);
+    return input;}
 }
 
 function changeInput(button, input){
   switch (button) {
     case 'Enter':
+    case '=':
       let calculator = new Calculator();
       return calculator.calculate(input);
       break;
