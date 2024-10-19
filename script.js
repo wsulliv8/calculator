@@ -19,13 +19,18 @@ function handleInput(button) {
     case '1/x':
     case 'x2':
     case 'x':
+    case '+/-':
       complete = true;
       input = calculator.calculateSpecial(input, button).toString();
       break;
     case 'C':
+    case 'CE':
     case 'Delete':
       complete = false;
       input = '';
+      break;
+    case '\ue14a':
+      input = input.slice(1);
       break;
     default:
       if (complete) {
@@ -45,23 +50,26 @@ function Calculator() {
     '*': (x, y) => x*y,
     '/': (x, y) => x/y,
     '%': (x, y) => x%y,
-    '1/x': (x, y) => 1/x,
-    'x2': (x, y) => x*x,
-    'x': (x, y) => Math.sqrt(x),
+    '1/x': (x) => 1/x,
+    'x2': (x) => x*x,
+    'x': (x) => Math.sqrt(x),
+    '+/-': (x) => x*(-1),
   }
 
   this.calculate = (str) => {
-    //split string by operator but remember operator
-    let equation = str.split(/(\D)/),
-      x = +equation[0],
-      op = equation[1],
-      y = +equation[2];
-    log(equation);
-    if (!this.methods[op] || isNaN(x) || isNaN(y)) return NaN;
-    
-    return this.methods[op](x,y);
-  };
+    //create arrays for operators and operands
+    let operators = str.match(/[^\.\d]/g);
+    let operands = str.split(/[^\.\d]/).map((char) => +char);
+    /*ACTION: Able to accept multiple inputs (includind decimals)
+    but does not observe proper order of operations */ 
+    return operands.reduce( (total,current,index, operands) => {
+      if (index === operands.length)
+        return total;
+      else
+        return this.methods[operators[index-1]](total,operands[index]);
 
+    })
+  };
   this.calculateSpecial = (x, op) => this.methods[op](x);
 }
 
