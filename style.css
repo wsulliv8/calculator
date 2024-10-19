@@ -40,10 +40,11 @@ body {
 
 .output {
   display: flex;
-  justify-content: center;
+  justify-content: right;
   align-items: center;
-  flex: 0 0 4%;
-  font-size: 22px;
+  width: 18px;
+  min-width: 18px;
+  font-size: 30px;
 }
 
 .buttons {
