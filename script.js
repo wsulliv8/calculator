@@ -28,11 +28,12 @@ function Calculator() {
   }
 
   this.calculate = (str) => {
-    let equation = str.split(''),
+    //split string by operator but remember operator
+    let equation = str.split(/(\D)/),
       x = +equation[0],
       op = equation[1],
       y = +equation[2];
-
+    log(`${x} ${op} ${y}`);
     if (!this.methods[op] || isNaN(x) || isNaN(y)) return NaN;
     
     return this.methods[op](x,y);
