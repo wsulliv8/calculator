@@ -4,8 +4,9 @@ let display = document.querySelectorAll('.output');
 let buttonHash = createHash(buttons);
 let input = '';
 let complete = false;
+let calculator = new Calculator();
 
-buttons.addEventListener('click', (event) => handleInput(event.target.innerText));
+buttons.addEventListener('click', (event) => handleInput(event.target.textContent));
 document.addEventListener('keydown', (event) => handleInput(event.key));
 
 function handleInput(button) {
@@ -13,8 +14,13 @@ function handleInput(button) {
     case 'Enter':
     case '=':
       complete = true;
-      let calculator = new Calculator();
       input = calculator.calculate(input).toString();
+      break;
+    case '1/x':
+    case 'x2':
+    case 'x':
+      complete = true;
+      input = calculator.calculateSpecial(input, button).toString();
       break;
     case 'C':
     case 'Delete':
@@ -39,6 +45,9 @@ function Calculator() {
     '*': (x, y) => x*y,
     '/': (x, y) => x/y,
     '%': (x, y) => x%y,
+    '1/x': (x, y) => 1/x,
+    'x2': (x, y) => x*x,
+    'x': (x, y) => Math.sqrt(x),
   }
 
   this.calculate = (str) => {
@@ -47,10 +56,13 @@ function Calculator() {
       x = +equation[0],
       op = equation[1],
       y = +equation[2];
+    log(equation);
     if (!this.methods[op] || isNaN(x) || isNaN(y)) return NaN;
     
     return this.methods[op](x,y);
   };
+
+  this.calculateSpecial = (x, op) => this.methods[op](x);
 }
 
 function createHash(element) {
