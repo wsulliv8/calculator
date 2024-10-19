@@ -3,15 +3,27 @@ let buttons = document.querySelector('.buttons');
 let display = document.querySelectorAll('.output');
 let buttonHash = createHash(buttons);
 let input = '';
+let complete = false;
 
 buttons.addEventListener('click', (event) => {
   let button = event.target.innerText;
+  if (complete) {
+    clearDisplay();
+    input = '';
+    complete = false;
+  }
   input = changeInput(button, input);
   displayInput(input);
   return;
 });
 document.addEventListener('keydown', (event) => {
   let button = event.key;
+  log(complete);
+  if (complete) {
+    clearDisplay();
+    input = '';
+    complete = false;
+  }
   input = changeInput(button, input);
   log(input);
   displayInput(input);
@@ -43,6 +55,7 @@ function changeInput(button, input){
     case 'Enter':
     case '=':
       let calculator = new Calculator();
+      complete = true;
       return calculator.calculate(input).toString();
     default:
       input = (button in buttonHash) ? input+=button : input;
@@ -60,11 +73,15 @@ function createHash(element) {
 }
 
 function displayInput(input) {
-  display.forEach((cell) => cell.innerText = '');
+  clearDisplay();
 
   for (let i=(input.length-1), j=0; i>=0; i--, j++) {
     display[i].innerText = input[j];
   }
+}
+
+function clearDisplay() { 
+  display.forEach((cell) => cell.innerText = '');
 }
 
 
