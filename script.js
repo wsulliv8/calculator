@@ -21,6 +21,7 @@ function handleInput(button) {
     case 'x':
     case '+/-':
       complete = true;
+      input = calculator.calculate(input).toString();
       input = calculator.calculateSpecial(input, button).toString();
       break;
     case 'C':
@@ -55,13 +56,17 @@ function Calculator() {
     'x': (x) => Math.sqrt(x),
     '+/-': (x) => x*(-1),
   }
-
+/* The code snippet below was my attempt at implementing the eval
+function. Handling order of operations got too complex, so I opted
+to use the eval function */
+/* 
   this.calculate = (str) => {
     //create arrays for operators and operands
     let operators = str.match(/[^\.\d]/g);
     let operands = str.split(/[^\.\d]/).map((char) => +char);
     /*ACTION: Able to accept multiple inputs (includind decimals)
-    but does not observe proper order of operations */ 
+    but does not observe proper order of operations. Need to build
+    parser for handling this. 
     return operands.reduce( (total,current,index, operands) => {
       if (index === operands.length)
         return total;
@@ -70,6 +75,10 @@ function Calculator() {
 
     })
   };
+*/
+
+  this.calculate = (str) => Function("return " + str)();
+
   this.calculateSpecial = (x, op) => this.methods[op](x);
 }
 
