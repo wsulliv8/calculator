@@ -5,30 +5,19 @@ let buttonHash = createHash(buttons);
 let input = '';
 let complete = false;
 
-buttons.addEventListener('click', (event) => {
-  let button = event.target.innerText;
+buttons.addEventListener('click', (event) => handleInput(event.target.innerText));
+document.addEventListener('keydown', (event) => handleInput(event.key));
+
+function handleInput(button) {
   if (complete) {
     clearDisplay();
     input = '';
     complete = false;
   }
-  input = changeInput(button, input);
+  input = changeInput(button);
   displayInput(input);
   return;
-});
-document.addEventListener('keydown', (event) => {
-  let button = event.key;
-  log(complete);
-  if (complete) {
-    clearDisplay();
-    input = '';
-    complete = false;
-  }
-  input = changeInput(button, input);
-  log(input);
-  displayInput(input);
-  return;
-});
+}
 
 function Calculator() {
   this.methods = {
@@ -50,7 +39,7 @@ function Calculator() {
   };
 }
 
-function changeInput(button, input){
+function changeInput(button){
   switch (button) {
     case 'Enter':
     case '=':
