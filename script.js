@@ -2,7 +2,8 @@ let log = console.log;
 let buttons = document.querySelector('.buttons');
 let display = document.querySelectorAll('.output');
 let buttonHash = createHash(buttons);
-let input = { equation : '', complete : false};
+let input = '';
+let complete = false;
 
 buttons.addEventListener('click', (event) => handleInput(event.target.innerText));
 document.addEventListener('keydown', (event) => handleInput(event.key));
@@ -11,23 +12,23 @@ function handleInput(button) {
   switch (button) {
     case 'Enter':
     case '=':
-      input.complete = true;
+      complete = true;
       let calculator = new Calculator();
-      input.equation = calculator.calculate(input.equation).toString();
+      input = calculator.calculate(input).toString();
       break;
     case 'C':
     case 'Delete':
-      input.complete = false;
-      input.equation = '';
+      complete = false;
+      input = '';
       break;
     default:
-      if (input.complete) {
-        input.complete = false;
-        input.equation = '';
+      if (complete) {
+        complete = false;
+        input = '';
       }
-      input.equation = (button in buttonHash) ? input.equation+=button : input.equation;
+      input = (button in buttonHash) ? input+=button : input;
   }
-  displayInput(input.equation);
+  displayInput(input);
   return;
 }
 
