@@ -9,12 +9,26 @@ buttons.addEventListener('click', (event) => handleInput(event.target.innerText)
 document.addEventListener('keydown', (event) => handleInput(event.key));
 
 function handleInput(button) {
-  if (complete) {
-    clearDisplay();
-    input = '';
-    complete = false;
+
+  switch (button) {
+    case 'Enter':
+    case '=':
+      let calculator = new Calculator();
+      complete = true;
+      input = calculator.calculate(input).toString();
+      break;
+    case 'C':
+    case 'Delete':
+      input = '';
+      complete = false;
+      break;
+    default:
+      if (complete) {
+        input = '';
+        complete = false;
+      }
+      input = (button in buttonHash) ? input+=button : input;
   }
-  input = changeInput(button);
   displayInput(input);
   return;
 }
@@ -25,6 +39,7 @@ function Calculator() {
     '-': (x, y) => x-y,
     '*': (x, y) => x*y,
     '/': (x, y) => x/y,
+    '%': (x, y) => x%y,
   }
 
   this.calculate = (str) => {
@@ -33,24 +48,10 @@ function Calculator() {
       x = +equation[0],
       op = equation[1],
       y = +equation[2];
-    log(`${x} ${op} ${y}`);
     if (!this.methods[op] || isNaN(x) || isNaN(y)) return NaN;
     
     return this.methods[op](x,y);
   };
-}
-
-function changeInput(button){
-  switch (button) {
-    case 'Enter':
-    case '=':
-      let calculator = new Calculator();
-      complete = true;
-      return calculator.calculate(input).toString();
-    default:
-      input = (button in buttonHash) ? input+=button : input;
-      return input;
-  }
 }
 
 function createHash(element) {
